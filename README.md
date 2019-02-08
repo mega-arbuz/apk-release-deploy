@@ -77,7 +77,7 @@ python3 deploy.py \
     --app.name=CoolAppp \
     --dropbox.key=$DROPBOX_KEY \
     --dropbox.folder=build \
-    --changelog.file=CHANGELOG
+    --changelog.file=CHANGELOG \
     --template.file=template_file \
     --zapier.hook=$ZAPIER_HOOK \
     --email.to=me@myorg.com,them@myorg.com
