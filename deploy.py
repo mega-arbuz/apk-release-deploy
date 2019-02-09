@@ -28,35 +28,35 @@ TEMPLATE_ERROR_CODE = 3
 CHANGES_ERROR_CODE = 4
 
 DROPBOX_UPLOAD_ARGS = {
-    "path": None,
-    "mode": "overwrite",
-    "autorename": True,
-    "strict_conflict": True
+    'path': None,
+    'mode': 'overwrite',
+    'autorename': True,
+    'strict_conflict': True
 }
 DROPBOX_UPLOAD_URL = 'https://content.dropboxapi.com/2/files/upload'
 
 DROPBOX_SHARE_DATA = {
-    "path": None,
-    "settings": {
-        "requested_visibility": "public"
+    'path': None,
+    'settings': {
+        'requested_visibility': 'public'
     }
 }
 DROPBOX_SHARE_URL = 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings'
 
 DROPBOX_DELETE_DATA = {
-    "path" : None
+    'path' : None
 }
 DROPBOX_DELETE_URL = 'https://api.dropboxapi.com/2/files/delete_v2'
 
 ZAPIER_SEND_DATA = {
-    "to": None,
-    "subject": None,
-    "body": None
+    'to': None,
+    'subject': None,
+    'body': None
 }
 
 
 def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_folder):
-    """Upload file to dropbox
+    '''Upload file to dropbox
     
     Args:
         target_file_name (str): Uploaded file will be rename to this file name.
@@ -66,7 +66,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
 
     Returns:
         str: Shared url for download.
-    """
+    '''
     dropbox_path = '/{folder}/{file_name}'.format(folder=dropbox_folder, file_name=target_file_name)
     DROPBOX_UPLOAD_ARGS['path'] = dropbox_path
     DROPBOX_SHARE_DATA['path'] = dropbox_path
@@ -86,7 +86,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     # Upload the file
     r = requests.post(DROPBOX_UPLOAD_URL, data=open(source_file, 'rb'), headers=headers)
 
-    if (r.status_code != requests.codes.ok):
+    if r.status_code != requests.codes.ok:
         print("Failed: upload file to Dropbox")
         return None
 
@@ -96,7 +96,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     # Share and return downloadable url
     r = requests.post(DROPBOX_SHARE_URL, data=json.dumps(DROPBOX_SHARE_DATA), headers=headers)
 
-    if (r.status_code != requests.codes.ok):
+    if r.status_code != requests.codes.ok:
         print("Failed: get share link from Dropbox")
         return None
 
@@ -105,7 +105,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
 
 
 def send_email(zapier_hook, to, subject, body):
-    """Send email with zapier hook
+    '''Send email with zapier hook
     
     Args:
         zapier_hook (str): Zapier hook url.
@@ -115,7 +115,7 @@ def send_email(zapier_hook, to, subject, body):
 
     Returns:
         bool: Send success/fail.
-    """
+    '''
     ZAPIER_SEND_DATA['to'] = to
     ZAPIER_SEND_DATA['subject'] = subject
     ZAPIER_SEND_DATA['body'] = body
@@ -128,14 +128,14 @@ def send_email(zapier_hook, to, subject, body):
 
 
 def get_app(release_dir):
-    """Extract app data
+    '''Extract app data
     
     Args:
         release_dir (str): Path to release directory.
 
     Returns:
         (str, str): App version and path to release apk file.
-    """
+    '''
     output_path = os.path.join(release_dir, 'output.json')
 
     with(open(output_path)) as app_output:
@@ -147,7 +147,7 @@ def get_app(release_dir):
 
 
 def get_target_file_name(app_name, app_version):
-    """Generate file name for released apk, using app name and version:
+    '''Generate file name for released apk, using app name and version:
     app_name - MyApp
     version - 1.03
     result: myapp_1_03.apk
@@ -158,14 +158,14 @@ def get_target_file_name(app_name, app_version):
 
     Returns:
         str: App file name.
-    """
+    '''
     app_name = app_name.lower()
     app_version = app_version.replace('.', '_')
     return '{name}_{version}.apk'.format(name=app_name, version=app_version).replace(' ','')
 
 
 def get_changes(change_log_path):
-    """Extract latest changes from changelog file.
+    '''Extract latest changes from changelog file.
     Changes are separated by ##
 
     Args:
@@ -173,7 +173,7 @@ def get_changes(change_log_path):
 
     Returns:
         str: Latest changes.
-    """
+    '''
     with(open(change_log_path)) as change_log_file:
         change_log = change_log_file.read()
 
@@ -185,7 +185,7 @@ def get_changes(change_log_path):
 
 
 def get_email(app_name, app_version, app_url, changes, template_file_path):
-    """Use template file to create release email subject and title.
+    '''Use template file to create release email subject and title.
 
     Args:
         app_name (str): App name.
@@ -196,15 +196,15 @@ def get_email(app_name, app_version, app_url, changes, template_file_path):
 
     Returns:
         (str, str): Email subject and email body.
-    """
+    '''
     target_subject = 1
     target_body = 2
     target = 0
 
-    subject = ""
-    body = ""
+    subject = ''
+    body = ''
 
-    template = ""
+    template = ''
 
     with(open(template_file_path)) as template_file:
         # Open template file and replace placeholders with data
@@ -251,17 +251,17 @@ if __name__ == '__main__':
 
     # Upload app file and get shared url
     file_url = upload_to_dropbox(target_app_file, app_file, options.dropbox_token, options.dropbox_folder)
-    if (file_url == None):
+    if file_url == None:
         exit(DROPBOX_ERROR_CODE)
     
     # Extract latest changes
     latest_changes = get_changes(options.changelog_file)
-    if (latest_changes == None):
+    if latest_changes == None:
         exit(CHANGES_ERROR_CODE)
     
     # Compose email subject and body
     subject, body = get_email(options.app_name, app_version, file_url, latest_changes, options.template_file)
-    if (subject == None or body == None):
+    if subject == None or body == None:
         exit(TEMPLATE_ERROR_CODE)
     
     # Send email with release data

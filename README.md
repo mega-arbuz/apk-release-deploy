@@ -8,7 +8,7 @@ This script is the last stage for Android CI/CD process and may be helpful in fo
 - Early stage projects which are not present in any app market, but need a way of distribution.
 - Enthusiastic CEO who wants to have the latest builds with the latest changes.
 - Freelancer who needs a painless way to distribute his work to clients.
-- Teams that wants an easy way to send the app for regression tests.
+- Teams that want an easy way to send the app for regression tests.
 
 ## How does it work
 ### API
