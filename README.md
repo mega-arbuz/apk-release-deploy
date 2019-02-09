@@ -2,6 +2,8 @@
 Deploy APK file with changelog for Android projects with CI/CD.
 This script uploads the release APK file to Dropbox and sends an email, with download link and changelog.
 
+This script is used in my GitLab CI/CD for Android projects. The process is described in this article [https://medium.com/@snd.oleg/android-gitlab-ci-cd-sign-deploy-3ad66a8f24bf](https://medium.com/@snd.oleg/android-gitlab-ci-cd-sign-deploy-3ad66a8f24bf)
+
 ## Motivation
 I created this for Gitlab CI, when I had a problem making build/release artifacts public.
 This script is the last stage for Android CI/CD process and may be helpful in following cases:
