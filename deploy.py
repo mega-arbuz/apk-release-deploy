@@ -87,7 +87,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     r = requests.post(DROPBOX_UPLOAD_URL, data=open(source_file, 'rb'), headers=headers)
 
     if r.status_code != requests.codes.ok:
-        print("Failed: upload file to Dropbox")
+        print("Failed: upload file to Dropbox: {errcode}".format(errcode=r.status_code))
         return None
 
     headers = {'Authorization': 'Bearer ' + dropbox_token,
@@ -97,7 +97,7 @@ def upload_to_dropbox(target_file_name, source_file, dropbox_token, dropbox_fold
     r = requests.post(DROPBOX_SHARE_URL, data=json.dumps(DROPBOX_SHARE_DATA), headers=headers)
 
     if r.status_code != requests.codes.ok:
-        print("Failed: get share link from Dropbox")
+        print("Failed: get share link from Dropbox {errcode}".format(errcode=r.status_code))
         return None
 
     # Replace the '0' at the end of the url with '1' for direct download
